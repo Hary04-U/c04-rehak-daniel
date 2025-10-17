@@ -45,7 +45,22 @@ public class LineRasterizer {
     }
 
 
-
+    /**
+     * Algoritmus DDA (Digital Differential Analyzer) pro rasterizaci úsečky, který postupně přidává malé přírůstky v ose X nebo Y podle sklonu úsečky.
+     * Pokud je úsečka více vodorovná (rozdilX >= rozdilY), inkrementujeme X 0 1 a dopočítáváme Y pomocí k.
+     * Pokud je úsečka více svislá (rozdilX < rozdilY), inkrementujeme Y o 1 a dopočítáváme X pomocí k.
+     * Dále přepisuje hodnoty prvního bodu a koncového bodu, tak aby úsečka se vždy vykreslovala zleva doprava.
+     * Pokud má úsečka nastavené dvě barvy (barva a barvaG), je mezi nimi vytvářen gradient, jinak pokud barvaG = null je úsečka vykreslována aktuální barvou.
+     * Gradient:
+     * Pokud je barvaG != null, každému bodu se přiřadí barva podle pozice t ∈ <0,1>.
+     * Výsledná barva je c = c1 + t * (c2 - c1).
+     * Tak vznikne plynulý barevný přechod (gradient).
+     * Ošetření hranic:
+     * Každý bod (x, y) se před zápisem kontroluje, zda leží uvnitř rastru.
+     * Pokud by byl mimo, pixel se nepíše (zabraňuje chybám IndexOutOfBounds).
+     * @param line
+     * @param raster
+     */
     public void vykresliLineDDA(Line line, BufferedImage raster) {
         int rozdilX = line.getEndPoint().getX() - line.getStartPoint().getX();
         int rozdilY = line.getEndPoint().getY() - line.getStartPoint().getY();
